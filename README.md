@@ -1,5 +1,7 @@
 # Lossy compressors for true-color PNGs
 
+This fork was created to publish the latest (2.1) build for Windows as the original author didn't bother himself to do so.
+
 ## Median Cut PNG Posterizer
 
 Reduces number of distinct color/alpha intensities in the image. Unlike typical posterization, which distributes levels evenly, this one tries to pick levels intelligently using varaince-based Median Cut and Voronoi iteration.
@@ -23,6 +25,12 @@ With `-b` argument it reduces PNG file sizes by selectively blurring the image. 
 If input/output files are not specified then stdin/stdout is used respectively.
 
 Posterized images can be further compressed using [PNGOUT](http://www.jonof.id.au/kenutils) or similar. Try [ImageOptim](http://imageoptim.com).
+
+## Building
+
+Place your `include` and `lib` directories from libpng inside the root of this repo (if you don't have them installed somewhere already in your mingw-w64 instance). I tore them out of this [package](https://packages.msys2.org/package/mingw-w64-x86_64-libpng). Then run your make:
+
+    make clean posterize
 
 ## GUI?
 
