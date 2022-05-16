@@ -1,2 +1,4 @@
 *.o
-posterize
+posterize*
+include/
+lib/
