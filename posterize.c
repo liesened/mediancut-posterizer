@@ -507,7 +507,7 @@ int main(int argc, char *argv[])
     png24_image img;
     pngquant_error retval;
 
-    if ((retval = rwpng_read_image24(input, &img, verbose))) {
+    if ((retval = rwpng_read_image24(input, &img, 0, verbose))) {
         fprintf(stderr, "Error: cannot read PNG from %s\n", input_name);
         return retval;
     }
@@ -523,7 +523,7 @@ int main(int argc, char *argv[])
         posterize(&img, maxlevels, maxerror, dither, verbose);
     }
 
-    if ((retval = rwpng_write_image24(output, &img, blurize ? PNG_FILTER_VALUE_AVG : PNG_FILTER_VALUE_NONE))) {
+    if ((retval = rwpng_write_image24(output, &img))) {
         fprintf(stderr, "Error: cannot write PNG to %s\n", output_name);
         return retval;
     }
