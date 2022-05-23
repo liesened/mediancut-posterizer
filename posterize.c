@@ -371,14 +371,17 @@ static void usage(const char *exepath)
 {
     const char *name = strrchr(exepath, '/');
     if (name) name++; else name = exepath;
-    fprintf(stderr, "Median Cut PNG Posterizer 2.1 (2015).\n" \
-    "Usage: %s [-vdb] [-Q <quality>] [levels] [input file] [output file]\n\n" \
+    fprintf(stderr, "Median Cut PNG Posterizer 2.1 (2015) (modified).\n" \
+    "Usage: %s [-vdbw] [-Q <quality>] [levels] [input file] [output file]\n\n" \
     "Specify number of levels (2-255) or quality (10-100).\n" \
     "-b blurize mode (uses diagonal averaging filter, recommended)\n" \
     "-d enables dithering\n" \
+    "-w write output content to input file\n" \
     "-v verbose output (to stderr)\n\n" \
-    "If files are not specified stdin and stdout is used.\n"
-    "%s -Q 95 in.png out.png\n", name, name);
+    "If files are not specified stdin and stdout is used.\n" \
+    "If -w is specified output file is not used.\n" \
+    "%s -w -Q 95 in.png\n"
+    "%s -Q 95 in.png out.png\n", name, name, name);
 }
 
 // performs voronoi iteration (mapping histogram to palette and creating new palette from remapped values)
@@ -444,16 +447,19 @@ static unsigned int mse_to_quality(double mse)
 
 int main(int argc, char *argv[])
 {
-    bool dither = false, verbose = false;
+    bool dither = false;
+    bool verbose = false;
     bool blurize = false;
+    bool overwrite = false;
     int quality = 0;
 
     int ch;
-    while ((ch = getopt(argc, argv, "hvdq:Q:b")) != -1) {
+    while ((ch = getopt(argc, argv, "hvdq:Q:b:w")) != -1) {
         switch (ch) {
             case 'b': blurize = true; break;
             case 'd': dither = true; break;
             case 'v': verbose = true; break;
+            case 'w': overwrite = true; break;
             case 'q':
             case 'Q':
                 quality = atol(optarg);
@@ -491,7 +497,7 @@ int main(int argc, char *argv[])
 
     FILE *output = stdout;
     const char *output_name = "stdout";
-    if (argn < argc && 0 != strcmp("-",argv[argn])) {
+    if (argn < argc && 0 != strcmp("-",argv[argn]) && !overwrite) { // see further below for overwrite fopen
         output_name = argv[argn++];
         output = fopen(output_name, "wb");
     }
@@ -523,11 +529,16 @@ int main(int argc, char *argv[])
         posterize(&img, maxlevels, maxerror, dither, verbose);
     }
 
+    if (overwrite) {
+        output = fopen(input_name, "wb");
+    }
+
     if ((retval = rwpng_write_image24(output, &img))) {
         fprintf(stderr, "Error: cannot write PNG to %s\n", output_name);
         return retval;
     }
-    if (output != stdout) fclose(output);
+    
+    if (output != stdout || overwrite) fclose(output);
 
     return 0;
 }
