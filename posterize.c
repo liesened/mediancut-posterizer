@@ -380,7 +380,7 @@ static void usage(const char *exepath)
     "-v verbose output (to stderr)\n\n" \
     "If files are not specified stdin and stdout is used.\n" \
     "If -w is specified output file is not used.\n" \
-    "%s -w -Q 95 in.png\n"
+    "%s -wb -Q 95 in.png\n"
     "%s -Q 95 in.png out.png\n", name, name, name);
 }
 
@@ -454,7 +454,7 @@ int main(int argc, char *argv[])
     int quality = 0;
 
     int ch;
-    while ((ch = getopt(argc, argv, "hvdq:Q:b:w")) != -1) {
+    while ((ch = getopt(argc, argv, "hvwdq:Q:b")) != -1) {
         switch (ch) {
             case 'b': blurize = true; break;
             case 'd': dither = true; break;
