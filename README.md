@@ -17,7 +17,7 @@ With `-b` argument it reduces PNG file sizes by selectively blurring the image. 
     posterize [ -v ] [ -b ] [ -d ] [ -w ] [ -Q <quality> ] [ levels ] -- [ input.png ] [ output.png ]
 
 * `-b` — Use blurring instead of posterization (recommended). Without this argument posterization is used.
-* `-w` — Write posterized content to input file.
+* `-w` — Write compressed content to input file.
 * `-Q num` — Picks minimum number of levels needed to achieve given quality. `num` is quality 0-100 (100 is best, similar to JPEG). Number of levels is optional if quality is specified.
 * `levels` — Number of levels to use (2-255). Lower number gives worse quality, but smaller file.
 * `-d` — Enables simple ordered dithering in posterization mode.
